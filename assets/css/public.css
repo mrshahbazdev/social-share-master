@@ -1,0 +1,77 @@
+.ssm-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.ssm-buttons.floating {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    z-index: 9999;
+    margin: 0;
+}
+
+.ssm-buttons.floating.position-left {
+    left: 10px;
+}
+
+.ssm-buttons.floating.position-right {
+    right: 10px;
+}
+
+.ssm-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border: none;
+    background: #2271b1;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.ssm-button:hover {
+    background: #1d5f96;
+    transform: translateY(-1px);
+}
+
+.ssm-buttons.style-rounded .ssm-button {
+    border-radius: 50px;
+}
+
+.ssm-buttons.style-minimal .ssm-button {
+    background: transparent;
+    color: #2271b1;
+    border: 1px solid #2271b1;
+}
+
+.ssm-buttons.style-minimal .ssm-button:hover {
+    background: #f0f6fc;
+}
+
+.ssm-button.ssm-copy {
+    background: #00a32a;
+}
+
+.ssm-button.ssm-copy:hover {
+    background: #008a22;
+}
+
+.ssm-icon svg {
+    display: block;
+}
+
+@media screen and (max-width: 782px) {
+    .ssm-buttons.floating {
+        display: none;
+    }
+}

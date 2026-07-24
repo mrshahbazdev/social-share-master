@@ -1,0 +1,49 @@
+.ssm-wrap {
+    max-width: 900px;
+}
+
+.ssm-wrap h1 {
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+}
+
+.ssm-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.ssm-card h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+}
+
+.ssm-toggle,
+.ssm-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.ssm-toggle input,
+.ssm-check input {
+    width: 18px;
+    height: 18px;
+}
+
+.ssm-label {
+    display: block;
+    font-weight: 600;
+    margin: 16px 0 6px;
+}
+
+.ssm-wrap select {
+    min-width: 180px;
+}
