@@ -267,7 +267,7 @@ class Social_Share_Master {
      * @return string
 	 */
 	public static function append_inline_buttons( $content ) {
-		if ( is_singular() ) {
+		if ( is_singular() && ! doing_filter( 'get_the_excerpt' ) ) {
 			$buttons = self::render_buttons( 'inline' );
 			if ( $buttons ) {
 				return $content . $buttons;
