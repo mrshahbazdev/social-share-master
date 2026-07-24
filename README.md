@@ -10,6 +10,7 @@ A WordPress plugin to add floating and inline social share buttons with Open Gra
 - Per post-type control.
 - Rounded, square and minimal button styles.
 - Left or right floating position.
+- Optional share count tracking.
 
 ## Installation
 

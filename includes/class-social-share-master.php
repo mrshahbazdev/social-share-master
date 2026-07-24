@@ -27,6 +27,8 @@ class Social_Share_Master {
 		add_filter( 'the_content', array( __CLASS__, 'append_inline_buttons' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'render_floating' ) );
 		add_action( 'wp_head', array( __CLASS__, 'social_meta' ) );
+		add_action( 'wp_ajax_ssm_count', array( __CLASS__, 'ajax_count' ) );
+		add_action( 'wp_ajax_nopriv_ssm_count', array( __CLASS__, 'ajax_count' ) );
 	}
 
 	/**
@@ -87,6 +89,14 @@ class Social_Share_Master {
 	public static function frontend_assets() {
 		wp_enqueue_style( 'ssm-public', SSM_URL . 'assets/css/public.css', array(), SSM_VERSION );
 		wp_enqueue_script( 'ssm-public', SSM_URL . 'assets/js/public.js', array(), SSM_VERSION, true );
+		wp_localize_script(
+			'ssm-public',
+			'ssm_public',
+			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'ssm_count_nonce' ),
+			)
+		);
 	}
 
 	/**
@@ -237,9 +247,10 @@ class Social_Share_Master {
 		);
 
 		$classes = 'ssm-buttons ' . esc_attr( $context ) . ' style-' . esc_attr( $settings['button_style'] ) . ' position-' . esc_attr( $settings['position'] );
+		$count   = $settings['show_count'] ? (int) get_post_meta( get_the_ID(), 'ssm_share_count', true ) : 0;
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( $classes ); ?>" data-url="<?php echo esc_url( get_permalink() ); ?>">
+		<div class="<?php echo esc_attr( $classes ); ?>" data-url="<?php echo esc_url( get_permalink() ); ?>" data-post-id="<?php echo esc_attr( get_the_ID() ); ?>">
 			<?php foreach ( $settings['networks'] as $network ) : ?>
 				<?php if ( isset( $links[ $network ] ) ) : ?>
 					<?php if ( 'copy' === $network ) : ?>
@@ -248,13 +259,16 @@ class Social_Share_Master {
 							<span class="ssm-label"><?php echo esc_html( self::get_networks()[ $network ] ); ?></span>
 						</button>
 					<?php else : ?>
-						<a href="<?php echo esc_url( $links[ $network ] ); ?>" target="_blank" rel="noopener noreferrer" class="ssm-button" data-network="<?php echo esc_attr( $network ); ?>">
+						<a href="<?php echo esc_url( $links[ $network ] ); ?>" target="_blank" rel="noopener noreferrer" class="ssm-button ssm-share" data-network="<?php echo esc_attr( $network ); ?>">
 							<span class="ssm-icon"><?php echo self::get_icon( $network ); ?></span>
 							<span class="ssm-label"><?php echo esc_html( self::get_networks()[ $network ] ); ?></span>
 						</a>
 					<?php endif; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
+			<?php if ( $settings['show_count'] ) : ?>
+				<span class="ssm-count"><?php echo esc_html( sprintf( __( '%d shares', 'social-share-master' ), $count ) ); ?></span>
+			<?php endif; ?>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -302,6 +316,20 @@ class Social_Share_Master {
 			'copy'      => '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>',
 		);
 		return isset( $icons[ $network ] ) ? $icons[ $network ] : '';
+	}
+
+	/**
+	 * AJAX share count handler.
+	 */
+	public static function ajax_count() {
+		check_ajax_referer( 'ssm_count_nonce', 'nonce', false );
+		$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+		if ( $post_id ) {
+			$count = (int) get_post_meta( $post_id, 'ssm_share_count', true );
+			$count++;
+			update_post_meta( $post_id, 'ssm_share_count', $count );
+		}
+		wp_send_json_success( array( 'count' => $count ) );
 	}
 
 	/**

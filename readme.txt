@@ -23,6 +23,7 @@ Features:
 * Per post-type control.
 * Multiple button styles: rounded, square, minimal.
 * Left or right floating position.
+* Optional share count tracking.
 
 == Installation ==
 

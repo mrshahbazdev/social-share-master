@@ -70,6 +70,13 @@
     display: block;
 }
 
+.ssm-count {
+    font-size: 12px;
+    color: #646970;
+    align-self: center;
+    margin-left: auto;
+}
+
 @media screen and (max-width: 782px) {
     .ssm-buttons.floating {
         display: none;
